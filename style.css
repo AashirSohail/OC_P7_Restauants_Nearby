@@ -1,0 +1,58 @@
+body{
+    overflow:hidden;
+}
+
+.nav{
+    background-color: rgb(26, 27, 73);
+    height: 3rem;
+}
+.height{
+    height: 98vh;
+}
+#map {
+    height: 100%;
+  }
+
+.list{
+    background-color: #fdc62d;
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin-left: -1rem;
+    position: relative;
+
+}
+
+#listHeading{
+    background-color: #3C3C3C;
+    color: white;
+    font-size: 1.8rem;
+    margin-left:-1rem;
+    margin-right:-1rem;
+    padding: 0.8rem 0rem;
+    position: sticky;
+    top: 0;}
+
+#listItems{
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: relative;
+    margin-left:-0.5rem;
+    margin-right:-0.5rem;
+
+}
+
+.item{
+    background-color: white;
+    height: 5rem;
+    border-bottom: 2px solid #212121;
+    border-radius: 0.2rem;
+    margin-top: 0.3rem;
+    padding-top: 0.3rem;
+}
+
+.img {
+    width: 5rem;
+    height: 4rem;
+    float: right;
+    padding-right: 1rem;
+}
