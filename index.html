@@ -26,24 +26,38 @@
     <script type="text/javascript"
         src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.1/js/mdb.min.js"></script>
 
+    <link rel="stylesheet" href="styles/modal.css">
     <link rel="stylesheet" href="style.css">
     <script src="./app.js"></script>
 </head>
 
-<body onload = "getLocation(), displayLocalRestaurants()">
+<body onload="getLocation(), displayLocalRestaurants(), fetchNearbyRestaurants()">
     <div class="row height">
         <div class="col-9 map">
-            <div id = "map"></div>
+            <div id="map"></div>
         </div>
         <div class="col-3 list text-center">
-            <div id = "listHeading">Restaurants Nearby</div>
-            <div id = "listItems">
+            <div id="listHeading"> Restaurants Nearby <a class="btn" href="#" onclick="addManually()">👋</a></div>
+            <div id="listItems">
             </div>
         </div>
     </div>
 
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDRSqcyUfOVEVJuOiG42eGko-BKNUhxTII&callback=initMap">
-    </script>
+    <div id="form" class="form">
+        <div class = "form-content">
+            <span class="close">&times;</span>
+            <h2 class="text-center">Add Restaurant</h2>
+            <form onsubmit="addRestaurant()">
+                <span class="pad">Restaurant Name:</span><input id="name" type="text" name="Name" required><br>
+                <span class="pad">Restaurant Address:</span><input id="address" type="text" name="Address" required>
+                <button id="form-btn" class="mt-2 btn btn-warning btn-block" type="submit" onclick="addRestaurant()">Add</button>
+            </form>
+        </div>
+    </div>
+
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDRSqcyUfOVEVJuOiG42eGko-BKNUhxTII&libraries=places&callback=initMap">
+        </script>
 
 </body>
 
