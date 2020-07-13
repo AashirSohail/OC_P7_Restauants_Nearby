@@ -322,8 +322,8 @@ function displayLocalRestaurants() {
             <div class = "col-7 text-left">
                 <p class = "pl-2">
                 <b>${localRest[i].restaurantName}</b><br>
-                ${localRest[i].address}<br>
-                <i class="fas fa-star amber-text"></i> ${getLocalRating(localRest[i].ratings)}
+                <p class = "address">${localRest[i].address}</p><br>
+                <i class="pl-2 fas fa-star amber-text"></i> ${getLocalRating(localRest[i].ratings)}
                 </p>
             </div>
             <div class = "col-5 text-right">
@@ -344,8 +344,8 @@ function displayManualRestaurants(rest) {
             <div class = "col-7 text-left">
                 <p class = "pl-2">
                 <b>${rest.name}</b><br>
-                ${rest.address}<br>
-                <i class="fas fa-star amber-text"></i> ${rest.ratings}
+                <p class = "address"> ${rest.address}</p><br>
+                <i class="pl-2 fas fa-star amber-text"></i> ${rest.ratings}
                 </p>
             </div>
             <div class = "col-5 text-right">
@@ -362,8 +362,9 @@ function displayNearbyRestaurants() {
     var list = document.getElementById('listItems')
     list.innerHTML = ''
     for (var i = 0; i < fetchedRestaurants.length; i++) {
+        console.log(fetchedRestaurants[i].place_id)
         var item = `
-        <div class = "item">
+        <div class = "item" data-place=${fetchedRestaurants[i].place_id} onclick = "review(this)">
             <div class = "row">
             <div class = "col-7 text-left">
                 <p class = "pl-2">
@@ -472,7 +473,8 @@ function fetchNearbyRestaurants() {
     var request = {
         location: map_center,
         radius: '500',
-        type: ['restaurant']
+        type: ['restaurant'],
+        rankby: "distance"
     };
 
     service = new google.maps.places.PlacesService(map);
@@ -480,7 +482,7 @@ function fetchNearbyRestaurants() {
 }
 
 var fetchedRestaurants = [];
-var fetchedRest = { imageUrl: '', name: '', rating: 0, user_ratings_total: 0, vicinity: '', location: '' }
+var fetchedRest = { imageUrl: '', name: '', rating: 0, user_ratings_total: 0, vicinity: '', location: '', place_id: 0}
 
 function storeFetchedRestaurants(results, status) {
     if (status == google.maps.places.PlacesServiceStatus.OK) {
@@ -492,10 +494,10 @@ function storeFetchedRestaurants(results, status) {
             fetchedRest.rating = results[i].rating;
             fetchedRest.user_ratings_total = results[i].user_ratings_total;
             fetchedRest.vicinity = results[i].vicinity;
-            fetchedRest.location = results[i].geometry.location
-
+            fetchedRest.location = results[i].geometry.location;
+            fetchedRest.place_id = results[i].place_id;
             checkUnique(fetchedRest);
-            fetchedRest = { imageUrl: '', name: '', rating: 0, user_ratings_total: 0, vicinity: '', location: '' }
+            fetchedRest = { imageUrl: '', name: '', rating: 0, user_ratings_total: 0, vicinity: '', location: '', place_id: 0}
 
         }
     }
@@ -525,3 +527,9 @@ function displayFetchedRestaurants() {
     })
     displayNearbyRestaurants();
 }
+
+function review(item){
+    console.log(item.getAttribute('place'));
+}
+
+
