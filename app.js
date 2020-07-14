@@ -414,7 +414,6 @@ function review(item) {
     };
 
     if (item.getAttribute('place')) {
-        console.log(item.getAttribute('place'));
 
         service.getDetails({
             placeId: item.getAttribute('place')
@@ -438,7 +437,7 @@ function review(item) {
                     listContainer.innerHTML = '';
                     var template = `
                         <div class = "text-left">    
-                            <p class = "clickedName">${clickedRestaurant.name} <a id = "cross"><i class="fas fa-times-circle"></i></a></p>
+                            <p class = "clickedName">${clickedRestaurant.name} <a class = "cross" id ="cross"><i func="cross" class="fas fa-times-circle"></i></a></p>
                             <p class = "clickedRating"><i class="pr-2 fas fa-star amber-text"></i> Rating <b class = "right">${clickedRestaurant.rating}</b></p>
                             <img class ="clickedImg" src="${clickedRestaurant.img || "imgs/place.png"}">
                             <p class ="clickedAddress">${clickedRestaurant.address}</p>
@@ -448,11 +447,9 @@ function review(item) {
                         `
                     listContainer.innerHTML = template;
 
-                    console.log(clickedRestaurant.reviews)
                     //user-reviews
                     if (clickedRestaurant.reviews.length) {
                         for (let i = 0; i < clickedRestaurant.reviews.length; i++) {
-                            console.log(clickedRestaurant.reviews[i])
                             document.getElementById('listContainer').innerHTML += `
                             <div class = "row reviewList">
                                 <div class = "col-7 text-left">
@@ -485,18 +482,15 @@ function review(item) {
     }
 }
 
-//listeners
-if (document.getElementById('cross')) {
-    document.getElementById('cross').addEventListener('click', function () {
+document.addEventListener('click', function(e) {
+    e = e || window.event;
+    var target = e.target || e.srcElement, text = target.textContent || target.innerText;
+    if(event.target.getAttribute('func') === 'cross'){
+        console.log(event.target.getAttribute('func'))
+        let listContainer = document.getElementById('listContainer');
         listContainer.innerHTML = clostedText;
-    });
-}
-if (document.getElementById('add')) {
-    document.getElementById('add').addEventListener('click', function () {
-        addReview();
-    });
-}
-
+    }    
+}, false);
 
 function addMarker(pos, title, color) {
     var marker = new google.maps.Marker({
