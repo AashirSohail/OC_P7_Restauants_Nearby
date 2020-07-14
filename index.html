@@ -35,9 +35,9 @@
         <div class="col-9 map">
             <div id="map"></div>
         </div>
-        <div class="col-3 list text-center" id = "listContainer">
+        <div class="col list text-center" id = "listContainer">
             <div id="listHeading">
-                <p>Restaurants Nearby</p>
+                <p><a onclick="toggleMenu()" id = "back"><i class="fas fa-arrow-circle-left"></i></a>Restaurants Nearby</p>
                 <div class="row">
                     <div class="col-3">
                         <span class="minmax">Min:</span><span id="ratingMin"></span><br>
@@ -67,7 +67,7 @@
             <form onsubmit="addRestaurant();return false">
                 <span class="pad">Restaurant Name:</span><input id="name" type="text" name="Name" required><br>
                 <span class="pad">Restaurant Address:</span><input id="address" type="text" name="Address" required>
-                <button id="form-btn" class="mt-2 btn btn-warning btn-block" type="submit" onclick="addRestaurant()">Add</button>
+                <button id="form-btn" class="mt-2 btn btn-warning btn-block" type="submit">Add</button>
             </form>
         </div>
     </div>
@@ -79,13 +79,16 @@
                 <span class="pad">Name:</span>
                 <input id="username" type="text" name="Name" required><br>
                 <span class="pad">Review:</span><br>
-                <textarea id="userreview" type="text" name="Review" cols="58" required></textarea>
+                <p><textarea id="userreview" type="text" name="Review" cols="58" required></textarea></p>
                 <span class="pad">Rating:</span>
                 <input id="userrating" type="text" name="Rating" required>
                 <button id="form-btn" class="mt-2 btn btn-warning btn-block" type="submit">Add</button>
             </form>
         </div>
     </div>
+
+    <div id="fab" class="fab"><a onclick="toggleMenu()"><i class="fas fa-th-list"></i></a></div>
+
 
     <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDRSqcyUfOVEVJuOiG42eGko-BKNUhxTII&libraries=places&callback=initMap">

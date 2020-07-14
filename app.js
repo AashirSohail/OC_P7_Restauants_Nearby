@@ -440,7 +440,7 @@ function review(item) {
                             <p class = "clickedName">${clickedRestaurant.name} <a class = "cross" id ="cross"><i func="cross" class="fas fa-times-circle"></i></a></p>
                             <p class = "clickedRating"><i class="pr-2 fas fa-star amber-text"></i> Rating <b class = "right">${clickedRestaurant.rating}</b></p>
                             <img class ="clickedImg" src="${clickedRestaurant.img || "imgs/place.png"}">
-                            <p class ="clickedAddress">${clickedRestaurant.address}</p>
+                            <p class ="clickedAddress"><i class="fas fa-map-marked-alt pr-2"></i>${clickedRestaurant.address}</p>
                             <p class ="clickedTotal">${clickedRestaurant.total_ratings} <span class= "pl-2">User Reviews</span> <a id = "add"><i class="fas fa-plus-circle"></i></a></p>
                             <div id = "reviews" class="mt-3"></div>
                         </div
@@ -626,7 +626,8 @@ function fetchNearbyRestaurants() {
         type: ['restaurant'],
         rankby: "distance"
     };
-
+    //removeMarker()
+    fetchedRestaurants = [];
     service = new google.maps.places.PlacesService(map);
     service.nearbySearch(request, storeFetchedRestaurants);
 }
@@ -703,3 +704,35 @@ function searchByRating() {
     }
 }
 
+function toggleMenu(){
+    var x = document.getElementById("listContainer")
+
+    if(window.innerWidth>600){
+        return
+    }
+    if (x.style.display === "none") {
+        x.style.display = "block";
+      } else {
+        x.style.display = "none";
+      }
+}
+
+window.onresize= function(){
+    if(window.innerWidth>600){
+        var x = document.getElementById("listContainer")
+        x.style.display = "block";
+        var y = document.getElementById("back")
+        y.style.display = "none"
+        var z = document.getElementById("fab")
+        z.style.display = "none"
+        document.getElementById("userreview").cols = "58"
+    }
+    if(window.innerWidth < 600){
+        var y = document.getElementById("back")
+        y.style.display = "block"
+        var z = document.getElementById("fab")
+        z.style.display = "block"
+        //userreview
+        document.getElementById("userreview").cols = "34"
+    }
+}
