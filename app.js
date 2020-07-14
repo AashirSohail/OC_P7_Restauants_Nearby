@@ -486,7 +486,6 @@ document.addEventListener('click', function(e) {
     e = e || window.event;
     var target = e.target || e.srcElement, text = target.textContent || target.innerText;
     if(event.target.getAttribute('func') === 'cross'){
-        console.log(event.target.getAttribute('func'))
         let listContainer = document.getElementById('listContainer');
         listContainer.innerHTML = clostedText;
     }    
