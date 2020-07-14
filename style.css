@@ -36,7 +36,7 @@ body {
 }
 
 #listItems {
-    overflow-y: auto; 
+    overflow-y: auto;
     margin-left: -0.8rem;
     margin-right: -1rem;
     overflow-x: hidden;
@@ -70,7 +70,13 @@ body {
     margin-right: 1rem;
     margin-top: 0.8rem;
     display: block;
+}
 
+.profile{
+    width: 3rem;
+    height: 3rem;
+    float: right;
+    border-radius: 50%;
 }
 
 .form {
@@ -95,6 +101,7 @@ body {
     width: 100%;
     border-radius: 0.2rem;
 }
+
 .form-content {
     background-color: #FFFFFF;
     margin: auto;
@@ -102,30 +109,161 @@ body {
     border: 1px solid #888;
     width: 80%;
     border-radius: 0.3rem;
-  }
+}
 
-  /* The Close Button */
+/* The Close Button */
+
 .close {
     color: #aaaaaa;
     float: right;
     font-size: 28px;
     font-weight: bold;
-  }
-  
-  .close:hover,
-  .close:focus {
+}
+
+.close:hover, .close:focus {
     color: #000;
     text-decoration: none;
     cursor: pointer;
-  }
+}
 
-  #form-btn{
-      color: black;
-      font-weight: 500;
-  }
-  
-  .address{
-      font-size: small;
-      margin-bottom: -1rem;
-      padding-left:0.5rem;
-  }
+#form-btn {
+    color: black;
+    font-weight: 500;
+}
+
+.address {
+    font-size: small;
+    margin-bottom: -1rem;
+    padding-left: 0.5rem;
+}
+
+.search {
+    margin-left: -1rem;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    padding-bottom: 1rem;
+}
+
+.custom-range {
+    color: #FFBB33;
+}
+
+.slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 10px;
+    border-radius: 5px;
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+    margin-left: -1rem;
+}
+
+.slider:hover {
+    opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 23px;
+    height: 25px;
+    border: 0;
+    background: url('imgs/star.png');
+    cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+    width: 25px;
+    height: 24px;
+    border: 0;
+    background: url('imgs/star.png');
+    cursor: pointer;
+}
+
+#ratingMin {
+    font-size: small;
+    padding-left: 0.3rem;
+}
+
+#ratingMax {
+    font-size: small;
+    padding-left: 0.3rem;
+}
+
+.minmax {
+    font-size: large;
+    padding-left: 0.3rem;
+}
+
+.clickedImg {
+    width: 115%;
+    margin-left: -1rem;
+    height: 15rem;
+    object-fit: cover;
+}
+
+#cross {
+    float: right;
+}
+#add {
+    float: right;
+}
+.right{
+    float: right;
+}
+
+.clickedName {
+    background-color: #3C3C3C;
+    width: 111%;
+    margin-left: -1rem;
+    color: white;
+    font-size: 1.2rem;
+    padding: 1rem;
+}
+
+.clickedAddress {
+    background-color: rgb(236, 236, 236);
+    padding: 1.2rem;
+    margin-left: -1rem;
+    margin-right: -1rem;
+}
+
+.clickedRating{
+background-color:#4d4d4d;
+padding: 1.2rem;
+margin-left: -1rem;
+margin-right: -1rem;
+color: white;
+margin-top: -1rem;
+margin-bottom: -0.5rem;
+font-weight: bolder;
+}
+.clickedTotal{
+    background-color: rgb(209, 208, 208);
+    margin: -1rem;
+    padding: 1rem;
+    padding-left: 1.2rem;
+}
+
+.reviewList{
+    background-color: rgb(179, 178, 178);
+    padding-top: 1rem;
+    border-bottom: 1px solid black;
+}
+
+.ago{
+    font-size: small;
+}
+
+@media only screen and (max-width: 600px) {
+    .clickedImg {
+        width: 102%;
+        margin-left: -1rem;
+        height: 15rem;
+        object-fit: cover;
+    }
+}

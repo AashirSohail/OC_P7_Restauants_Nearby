@@ -267,11 +267,13 @@ var localRest = [
 var manualRest = []
 
 var map;
+var service;
 var userLocation = {
     lat: 33.540102,
     lng: 73.1485852
 };
 var currentClickedLocation;
+var clostedText;
 
 function getLocation() {
     if (navigator.geolocation) {
@@ -291,6 +293,7 @@ function initMap() {
         zoom: 14,
         styles: style
     });
+    service = new google.maps.places.PlacesService(map);
 
     var pos = {
         lat: userLocation.lat,
@@ -313,10 +316,13 @@ function addLocalMarkers() {
     }
 }
 
-function displayLocalRestaurants() {
+function displayLocalRestaurants(ratingSearch) {
     var list = document.getElementById('listItems')
+    var min = document.getElementById("slidermin").value;
+    var max = document.getElementById("slidermax").value;
     for (var i = 0; i < localRest.length; i++) {
-        var item = `
+        if (!ratingSearch || (fetchedRestaurants[i].rating >= min && fetchedRestaurants[i].rating <= max)) {
+            var item = `
         <div class = "item">
             <div class = "row">
             <div class = "col-7 text-left">
@@ -332,7 +338,8 @@ function displayLocalRestaurants() {
             </div>
         </div>
     `
-        list.innerHTML += item
+            list.innerHTML += item
+        }
     }
 }
 
@@ -358,31 +365,138 @@ function displayManualRestaurants(rest) {
 
 }
 
-function displayNearbyRestaurants() {
+function displayNearbyRestaurants(ratingSearch) {
     var list = document.getElementById('listItems')
-    list.innerHTML = ''
-    for (var i = 0; i < fetchedRestaurants.length; i++) {
-        console.log(fetchedRestaurants[i].place_id)
-        var item = `
-        <div class = "item" data-place=${fetchedRestaurants[i].place_id} onclick = "review(this)">
-            <div class = "row">
-            <div class = "col-7 text-left">
-                <p class = "pl-2">
-                <b>${fetchedRestaurants[i].name}</b><br>
-                <p class = "address">${fetchedRestaurants[i].vicinity.substring(0, 20)}</p><br>
-                <i class="pl-2 fas fa-star amber-text"></i> ${fetchedRestaurants[i].rating || 0}
-                </p>
-            </div>
-            <div class = "col-5 text-right">
-                <img class ="img" src = "${fetchedRestaurants[i].imageUrl || "imgs/place.png"}">
-            </div>
-            </div>
-        </div>
-    `
-        list.innerHTML += item
+    if (list) {
+        list.innerHTML = ''
     }
-    displayLocalRestaurants();
+    else {
+        return
+    }
+    var min = document.getElementById("slidermin").value;
+    var max = document.getElementById("slidermax").value;
+    console.clear();
+    for (var i = 0; i < fetchedRestaurants.length; i++) {
+        //if(!ratingSearch || (fetchedRestaurants.rating >= min && fetchedRestaurants.rating <= max)){
+        if (!ratingSearch || (fetchedRestaurants[i].rating >= min && fetchedRestaurants[i].rating <= max)) {
+            var item = `
+            <div class = "item" place=${fetchedRestaurants[i].place_id} onclick = "review(this)">
+                <div class = "row">
+                    <div class = "col-7 text-left">
+                    <p class = "pl-2">
+                    <b>${fetchedRestaurants[i].name}</b><br>
+                    <p class = "address">${fetchedRestaurants[i].vicinity.substring(0, 20)}</p><br>
+                    <i class="pl-2 fas fa-star amber-text"></i> ${fetchedRestaurants[i].rating || 0}
+                    </p>
+                </div>
+                <div class = "col-5 text-right">
+                    <img class ="img" src = "${fetchedRestaurants[i].imageUrl || "imgs/place.png"}">
+                </div>
+                </div>
+            </div>
+        `
+            list.innerHTML += item
+        }
+    }
+    displayLocalRestaurants(true);
 }
+
+var clostedText = '';
+
+function review(item) {
+    var clickedRestaurant = {
+        name: '',
+        img: '',
+        rating: 0,
+        reviews: [],
+        total_ratings: 0,
+        vicinity: ''
+    };
+
+    if (item.getAttribute('place')) {
+        console.log(item.getAttribute('place'));
+
+        service.getDetails({
+            placeId: item.getAttribute('place')
+        }, function (place, status) {
+            if (status === google.maps.places.PlacesServiceStatus.OK) {
+                if (place) {
+                    clickedRestaurant.name = place.name;
+                    if (place.photos) {
+                        clickedRestaurant.img = place.photos[0].getUrl({ maxWidth: 200, maxHeight: 200 });
+                    }
+                    else {
+                        clickedRestaurant.img = "imgs/place.png";
+                    }
+                    clickedRestaurant.address = place.formatted_address;
+                    clickedRestaurant.rating = place.rating;
+                    clickedRestaurant.total_ratings = place.user_ratings_total;
+                    clickedRestaurant.reviews = place.reviews;
+
+                    let listContainer = document.getElementById('listContainer');
+                    clostedText = listContainer.innerHTML;
+                    listContainer.innerHTML = '';
+                    var template = `
+                        <div class = "text-left">    
+                            <p class = "clickedName">${clickedRestaurant.name} <a id = "cross"><i class="fas fa-times-circle"></i></a></p>
+                            <p class = "clickedRating"><i class="pr-2 fas fa-star amber-text"></i> Rating <b class = "right">${clickedRestaurant.rating}</b></p>
+                            <img class ="clickedImg" src="${clickedRestaurant.img || "imgs/place.png"}">
+                            <p class ="clickedAddress">${clickedRestaurant.address}</p>
+                            <p class ="clickedTotal">${clickedRestaurant.total_ratings} <span class= "pl-2">User Reviews</span> <a id = "add"><i class="fas fa-plus-circle"></i></a></p>
+                            <div id = "reviews" class="mt-3"></div>
+                        </div
+                        `
+                    listContainer.innerHTML = template;
+
+                    console.log(clickedRestaurant.reviews)
+                    //user-reviews
+                    if (clickedRestaurant.reviews.length) {
+                        for (let i = 0; i < clickedRestaurant.reviews.length; i++) {
+                            console.log(clickedRestaurant.reviews[i])
+                            document.getElementById('listContainer').innerHTML += `
+                            <div class = "row reviewList">
+                                <div class = "col-7 text-left">
+                                    <p class = "pl-1">
+                                        <b>${clickedRestaurant.reviews[i].author_name}</b><br>
+                                        <i class="fas fa-star amber-text"></i> ${clickedRestaurant.reviews[i].rating || 0}
+                                    </p>
+                                </div>
+                                <div class = "col-5 text-right">
+                                    <img class ="profile" src = "${clickedRestaurant.reviews[i].profile_photo_url || "imgs/place.png"}">
+                                </div>
+                                <div class = "text-left ago pl-4">${clickedRestaurant.reviews[i].text + '\n'}</div><br>
+                                <div class = "text-right pl-2 ago right">${clickedRestaurant.reviews[i].relative_time_description}</div><br>
+                            </div>
+                            `
+                        }
+                    }
+
+
+                    //listeners
+                    document.getElementById('cross').addEventListener('click', function () {
+                        listContainer.innerHTML = clostedText;
+                    });
+                    document.getElementById('add').addEventListener('click', function () {
+                        addReview();
+                    });
+                }
+            }
+        });
+    }
+}
+
+//listeners
+if (document.getElementById('cross')) {
+    document.getElementById('cross').addEventListener('click', function () {
+        listContainer.innerHTML = clostedText;
+    });
+}
+if (document.getElementById('add')) {
+    document.getElementById('add').addEventListener('click', function () {
+        addReview();
+    });
+}
+
 
 function addMarker(pos, title, color) {
     var marker = new google.maps.Marker({
@@ -419,6 +533,48 @@ function addManually(location) {
     }
     currentClickedLocation = location;
 }
+
+function addReview() {
+    var modal = document.getElementById("form1");
+    modal.style.display = "block";
+    var span = document.getElementsByClassName("close")[0];
+    span.onclick = function () {
+        modal.style.display = "none";
+    }
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
+}
+
+function submitReview() {
+
+    var modal = document.getElementById("form1");
+    modal.style.display = "none";
+
+    var name = document.getElementById('username').value;
+    var review = document.getElementById('userreview').value;
+    var rating = document.getElementById('userrating').value;
+    document.getElementById('listContainer').innerHTML += `
+    <div class = "row reviewList">
+        <div class = "col-7 text-left">
+            <p class = "pl-1">
+                <b>${name}</b><br>
+                <i class="fas fa-star amber-text"></i> ${rating || 0}
+            </p>
+        </div>
+        <div class = "col-5 text-right">
+            <img class ="profile" src = "imgs/user.png">
+        </div>
+        <div class = "text-left ago pl-4">${review}</div><br>
+        <div class = "text-right pl-3 ago right"> Just Now</div><br>
+    </div>
+    `
+
+}
+
 var tempManualRest = {
     name: '',
     address: '',
@@ -482,7 +638,7 @@ function fetchNearbyRestaurants() {
 }
 
 var fetchedRestaurants = [];
-var fetchedRest = { imageUrl: '', name: '', rating: 0, user_ratings_total: 0, vicinity: '', location: '', place_id: 0}
+var fetchedRest = { imageUrl: '', name: '', rating: 0, user_ratings_total: 0, vicinity: '', location: '', place_id: 0 }
 
 function storeFetchedRestaurants(results, status) {
     if (status == google.maps.places.PlacesServiceStatus.OK) {
@@ -497,7 +653,7 @@ function storeFetchedRestaurants(results, status) {
             fetchedRest.location = results[i].geometry.location;
             fetchedRest.place_id = results[i].place_id;
             checkUnique(fetchedRest);
-            fetchedRest = { imageUrl: '', name: '', rating: 0, user_ratings_total: 0, vicinity: '', location: '', place_id: 0}
+            fetchedRest = { imageUrl: '', name: '', rating: 0, user_ratings_total: 0, vicinity: '', location: '', place_id: 0 }
 
         }
     }
@@ -512,11 +668,11 @@ function checkUnique(obj) {
             index = i;
         }
     }
-    if(index > -1) {
+    if (index > -1) {
         fetchedRestaurants[index] = obj;
-      } else {
+    } else {
         fetchedRestaurants.push(obj)
-      }
+    }
 }
 
 
@@ -525,11 +681,31 @@ function displayFetchedRestaurants() {
     fetchedRestaurants.forEach((rest) => {
         addMarker(rest.location, rest.name, 'red')
     })
-    displayNearbyRestaurants();
+    displayNearbyRestaurants(false);
 }
 
-function review(item){
-    console.log(item.getAttribute('place'));
+function updateMin() {
+    var slider = document.getElementById("slidermin");
+    var output = document.getElementById("ratingMin");
+    output.innerHTML = slider.value; // Display the default slider value
+
+}
+function updateMax() {
+    var slider = document.getElementById("slidermax");
+    var output = document.getElementById("ratingMax");
+    output.innerHTML = slider.value; // Display the default slider value
+
 }
 
+function searchByRating() {
+    var sliderMin = document.getElementById("slidermin").value;
+    var sliderMax = document.getElementById("slidermax").value;
+
+    if (sliderMin > sliderMax) {
+        alert('Min can not be greater than Max');
+    }
+    else {
+        displayNearbyRestaurants(true);
+    }
+}
 
