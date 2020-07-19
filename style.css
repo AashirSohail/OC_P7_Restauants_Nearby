@@ -295,7 +295,7 @@ font-weight: bolder;
 
 @media only screen and (max-width: 600px) {
     #listHeading{
-        padding-right: 0.3rem;
+        margin-right: 0.3rem;
     }
     .fa-arrow-circle-left{
         font-size: 1.5rem;
