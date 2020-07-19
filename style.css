@@ -38,6 +38,7 @@ body {
     z-index: 1;
     border-bottom-right-radius: 1.3rem;
     border-bottom-left-radius: 1.3rem;
+    width: 111%;
 }
 
 #listItems {
@@ -295,6 +296,9 @@ font-weight: bolder;
  }
 
 @media only screen and (max-width: 600px) {
+    #listHeading {
+        width: 108.5%;
+    }
     a-arrow-circle-left{
         font-size: 1.5rem;
         margin-left: 1rem;
