@@ -2,7 +2,7 @@
 An easy-to-use, simple service that offers reviews of restaurants around you.
 Using external APIs such as Google Maps and Google Places and integrate all this information in a clear, organized way in the application!
 
-##See it Live in Action:
+## See it Live in Action:
 https://tender-lewin-890d56.netlify.app
 
 ## Features
