@@ -321,7 +321,7 @@ function displayLocalRestaurants(ratingSearch) {
     var min = document.getElementById("slidermin").value;
     var max = document.getElementById("slidermax").value;
     for (var i = 0; i < localRest.length; i++) {
-        if (!ratingSearch || (fetchedRestaurants[i].rating >= min && fetchedRestaurants[i].rating <= max)) {
+        if (!ratingSearch || (getLocalRating(localRest[i].ratings) >= min && getLocalRating(localRest[i].ratings) <= max)) {
             var item = `
         <div class = "item">
             <div class = "row">
@@ -375,7 +375,7 @@ function displayNearbyRestaurants(ratingSearch) {
     }
     var min = document.getElementById("slidermin").value;
     var max = document.getElementById("slidermax").value;
-    console.clear();
+    //console.clear();
     for (var i = 0; i < fetchedRestaurants.length; i++) {
         //if(!ratingSearch || (fetchedRestaurants.rating >= min && fetchedRestaurants.rating <= max)){
         if (!ratingSearch || (fetchedRestaurants[i].rating >= min && fetchedRestaurants[i].rating <= max)) {
@@ -441,7 +441,7 @@ function review(item) {
                             <p class = "clickedRating"><i class="pr-2 fas fa-star amber-text"></i> Rating <b class = "right">${clickedRestaurant.rating}</b></p>
                             <img class ="clickedImg" src="${clickedRestaurant.img || "imgs/place.png"}">
                             <p class ="clickedAddress"><i class="fas fa-map-marked-alt pr-2"></i>${clickedRestaurant.address}</p>
-                            <p class ="clickedTotal">${clickedRestaurant.total_ratings} <span class= "pl-2">User Reviews</span> <a id = "add"><i class="fas fa-plus-circle"></i></a></p>
+                            <p class ="clickedTotal">${clickedRestaurant.total_ratings} <span class= "pl-2">User Reviews</span> <a id = "add"><i func="add" class="fas fa-plus-circle"></i></a></p>
                             <div id = "reviews" class="mt-3"></div>
                         </div
                         `
@@ -467,15 +467,6 @@ function review(item) {
                             `
                         }
                     }
-
-
-                    //listeners
-                    document.getElementById('cross').addEventListener('click', function () {
-                        listContainer.innerHTML = clostedText;
-                    });
-                    document.getElementById('add').addEventListener('click', function () {
-                        addReview();
-                    });
                 }
             }
         });
@@ -488,6 +479,14 @@ document.addEventListener('click', function(e) {
     if(event.target.getAttribute('func') === 'cross'){
         let listContainer = document.getElementById('listContainer');
         listContainer.innerHTML = clostedText;
+    }    
+}, false);
+
+document.addEventListener('click', function(e) {
+    e = e || window.event;
+    var target = e.target || e.srcElement, text = target.textContent || target.innerText;
+    if(event.target.getAttribute('func') === 'add'){
+        addReview();
     }    
 }, false);
 
@@ -508,6 +507,7 @@ function addMarker(pos, title, color) {
     });
     marker.addListener('click', function () {
         infowindow.open(map, marker);
+        restMartkerClicked(marker.title);
     });
 }
 
@@ -605,6 +605,10 @@ function addRestaurant() {
     document.getElementById('name').value = '';
     document.getElementById('address').value = '';
     displayManualRestaurants(tempManualRest);
+}
+
+function restMartkerClicked(name){
+    console.log(name)
 }
 
 function getLocalRating(obj) {
@@ -732,4 +736,9 @@ window.onresize= function(){
         //userreview
         document.getElementById("userreview").cols = "34"
     }
+}
+document.onload = function(){
+    getLocation();
+    displayLocalRestaurants();
+    fetchNearbyRestaurants()
 }
