@@ -1,3 +1,4 @@
+//styles
 var style = [
     {
         "elementType": "geometry",
@@ -213,6 +214,7 @@ var style = [
     }
 ]
 
+//json for local restaurants
 var localRest = [
     {
         "restaurantName": "Bronco",
@@ -264,6 +266,7 @@ var localRest = [
     }
 ]
 
+//user added resturants will be appended here
 var manualRest = []
 
 var map;
@@ -284,7 +287,7 @@ function getLocation() {
 }
 function showPosition(position) {
     userLocation.lat = position.coords.latitud;
-    userLocation.lang = position.coords.longitude;
+    userLocation.lng = position.coords.longitude;
 }
 
 function initMap() {
