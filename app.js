@@ -267,29 +267,43 @@ var localRest = [
 ]
 
 //user added resturants will be appended here
-var manualRest = []
+var manualRestaurants = [
+    
+];
+//restaurant fetched from API call
+var fetchedRestaurants = [];
 
 var map;
 var service;
+//default postion
 var userLocation = {
     lat: 33.540102,
     lng: 73.1485852
 };
+//reference to the resutarant being explored
 var currentClickedLocation;
+//list of restaurants that needs to be hidden
 var clostedText;
 
+//get user location
 function getLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.watchPosition(showPosition);
     } else {
         console.log("Geolocation is not supported by this browser.");
+        userLocation = {
+            lat: 33.540102,
+            lng: 73.1485852
+        };
     }
 }
 function showPosition(position) {
     userLocation.lat = position.coords.latitud;
     userLocation.lng = position.coords.longitude;
+    console.log('Grabbed user location')
 }
 
+//initializes map
 function initMap() {
     map = new google.maps.Map(document.getElementById("map"), {
         center: userLocation,
@@ -313,12 +327,14 @@ function initMap() {
     });
 }
 
+//display local markers
 function addLocalMarkers() {
     for (var i = 0; i < localRest.length; i++) {
         addMarker({ lat: localRest[i].lat, lng: localRest[i].long }, localRest[i].restaurantName, "yellow")
     }
 }
 
+// display local restaurants
 function displayLocalRestaurants(ratingSearch) {
     var list = document.getElementById('listItems')
     var min = document.getElementById("slidermin").value;
@@ -326,7 +342,7 @@ function displayLocalRestaurants(ratingSearch) {
     for (var i = 0; i < localRest.length; i++) {
         if (!ratingSearch || (fetchedRestaurants[i].rating >= min && fetchedRestaurants[i].rating <= max)) {
             var item = `
-        <div class = "item">
+        <div place = ${localRest[i].restaurantName} class = "item" onclick="addLocalReview(this)">
             <div class = "row">
             <div class = "col-7 text-left">
                 <p class = "pl-2">
@@ -345,17 +361,69 @@ function displayLocalRestaurants(ratingSearch) {
         }
     }
 }
+//when clicked
+function addLocalReview(item) {
+    clostedText = listContainer.innerHTML;
+    if (item.getAttribute('place')) {
+        //search manualRestaurants for this name and fetch the object
+        rest = localRest.filter(r => {
+            return r.restaurantName == item.getAttribute('place')
+        })
+        var template = `
+        <div class = "text-left">    
+            <p class = "clickedName">${rest[0].restaurantName} <a class = "cross" id ="cross"><i func="cross" class="fas fa-times-circle"></i></a></p>
+            <p class = "clickedRating"><i class="pr-2 fas fa-star amber-text"></i> Rating <b class = "right">${getLocalRating(rest[0].ratings)}</b></p>
+            <img class ="clickedImg" src="imgs/place.png">
+            <p class ="clickedAddress"><i class="fas fa-map-marked-alt pr-2"></i>${rest[0].address}</p>
+            <p class ="clickedTotal">${rest[0].ratings.length || 0} <span class= "pl-2">User Reviews</span> <a id = "add"><i class="fas fa-plus-circle"></i></a></p>
+            <div id = "reviews" class="mt-3"></div>
+        </div
+        `
+        listContainer.innerHTML = template;
 
-function displayManualRestaurants(rest) {
+        //user-reviews
+        if (rest[0].ratings.length > 0) {
+            for (let i = 0; i < rest[0].ratings.length; i++) {
+                document.getElementById('listContainer').innerHTML += `
+            <div class = "row reviewList">
+                <div class = "col-7 text-left">
+                    <p class = "pl-1">
+                        <b>${rest[0].ratings[i].author_name || "Jhon Dow"}</b><br>
+                        <i class="fas fa-star amber-text"></i> ${rest[0].ratings[i].stars || 0}
+                    </p>
+                </div>
+                <div class = "col-5 text-right">
+                    <img class ="profile" src = "${rest[0].ratings[i].profile_photo_url || "imgs/place.png"}">
+                </div>
+                <div class = "text-left ago pl-4">${rest[0].ratings[i].comment + '\n'}</div><br>
+                <div class = "text-right pl-2 ago right">Just Now</div><br>
+            </div>
+            `
+            }
+        }
+        //listeners
+        document.getElementById('cross').addEventListener('click', function () {
+            listContainer.innerHTML = clostedText;
+        });
+        document.getElementById('add').addEventListener('click', function () {
+            addReview();
+        });
+    }
+}
+
+//display restaurant
+function displayManualRestaurants() {
     var list = document.getElementById('listItems')
-    var item = `
-        <div class = "item">
+
+    for(let i = 0; i < manualRestaurants.length; i++){
+        var item = `
+        <div place = ${manualRestaurants[i].name} class = "item" onclick = "addManualReview(this)">
             <div class = "row">
             <div class = "col-7 text-left">
                 <p class = "pl-2">
-                <b>${rest.name}</b><br>
-                <p class = "address"> ${rest.address}</p><br>
-                <i class="pl-2 fas fa-star amber-text"></i> ${rest.ratings}
+                <b>${manualRestaurants[i].name}</b><br>
+                <p class = "address"> ${manualRestaurants[i].address}</p><br>
+                <i class="pl-2 fas fa-star amber-text"></i> ${manualRestaurants[i].ratings}
                 </p>
             </div>
             <div class = "col-5 text-right">
@@ -365,7 +433,59 @@ function displayManualRestaurants(rest) {
         </div>
     `
     list.innerHTML += item
+    }
 
+    
+
+}
+
+function addManualReview(item) {
+    clostedText = listContainer.innerHTML;
+    if (item.getAttribute('place')) {
+        //search manualRestaurants for this name and fetch the object
+        rest = manualRestaurants.filter(r => {
+            return r.name == item.getAttribute('place')
+        }) 
+        var template = `
+        <div class = "text-left">    
+            <p class = "clickedName">${rest[0].name} <a class = "cross" id ="cross"><i func="cross" class="fas fa-times-circle"></i></a></p>
+            <p class = "clickedRating"><i class="pr-2 fas fa-star amber-text"></i> Rating <b class = "right">${rest[0].rating}</b></p>
+            <img class ="clickedImg" src="imgs/place.png">
+            <p class ="clickedAddress"><i class="fas fa-map-marked-alt pr-2"></i>${rest[0].address}</p>
+            <p class ="clickedTotal">${rest[0].total_ratings || 0} <span class= "pl-2">User Reviews</span> <a id = "add"><i class="fas fa-plus-circle"></i></a></p>
+            <div id = "reviews" class="mt-3"></div>
+        </div
+        `
+        listContainer.innerHTML = template;
+
+        //user-reviews
+        if (rest[0].reviews.length > 0) {
+            for (let i = 0; i < rest[0].reviews.length; i++) {
+                document.getElementById('listContainer').innerHTML += `
+            <div class = "row reviewList">
+                <div class = "col-7 text-left">
+                    <p class = "pl-1">
+                        <b>${rest[0].reviews[i].author_name}</b><br>
+                        <i class="fas fa-star amber-text"></i> ${rest[0].reviews[i].rating || 0}
+                    </p>
+                </div>
+                <div class = "col-5 text-right">
+                    <img class ="profile" src = "${rest[0].reviews[i].profile_photo_url || "imgs/place.png"}">
+                </div>
+                <div class = "text-left ago pl-4">${rest[0].reviews[i].text + '\n'}</div><br>
+                <div class = "text-right pl-2 ago right">Just Now</div><br>
+            </div>
+            `
+            }
+        }
+        //listeners
+        document.getElementById('cross').addEventListener('click', function () {
+            listContainer.innerHTML = clostedText;
+        });
+        document.getElementById('add').addEventListener('click', function () {
+            addReview();
+        });
+    }
 }
 
 function displayNearbyRestaurants(ratingSearch) {
@@ -378,7 +498,7 @@ function displayNearbyRestaurants(ratingSearch) {
     }
     var min = document.getElementById("slidermin").value;
     var max = document.getElementById("slidermax").value;
-    console.clear();
+    //console.clear();
     for (var i = 0; i < fetchedRestaurants.length; i++) {
         //if(!ratingSearch || (fetchedRestaurants.rating >= min && fetchedRestaurants.rating <= max)){
         if (!ratingSearch || (fetchedRestaurants[i].rating >= min && fetchedRestaurants[i].rating <= max)) {
@@ -401,7 +521,8 @@ function displayNearbyRestaurants(ratingSearch) {
             list.innerHTML += item
         }
     }
-    displayLocalRestaurants(true);
+    displayManualRestaurants();
+    displayLocalRestaurants(false);
 }
 
 var clostedText = '';
@@ -485,13 +606,13 @@ function review(item) {
     }
 }
 
-document.addEventListener('click', function(e) {
+document.addEventListener('click', function (e) {
     e = e || window.event;
     var target = e.target || e.srcElement, text = target.textContent || target.innerText;
-    if(event.target.getAttribute('func') === 'cross'){
+    if (event.target.getAttribute('func') === 'cross') {
         let listContainer = document.getElementById('listContainer');
         listContainer.innerHTML = clostedText;
-    }    
+    }
 }, false);
 
 function addMarker(pos, title, color) {
@@ -576,7 +697,7 @@ var tempManualRest = {
     address: '',
     ratings: 0
 }
-function addRestaurant() {
+function addManualRestaurant() {
     var modal = document.getElementById("form");
     modal.style.display = "none";
 
@@ -585,6 +706,14 @@ function addRestaurant() {
     console.log(name, address);
     tempManualRest.name = name;
     tempManualRest.address = address;
+    tempManualRest.rating = 0;
+    tempManualRest.reviews = [ 
+        {
+        author_name: "Aashir",
+        rating: 3,
+        text: "Awesome"
+        }
+    ];
 
     var marker = new google.maps.Marker({
         position: currentClickedLocation,
@@ -604,10 +733,10 @@ function addRestaurant() {
     marker.addListener('click', function () {
         infowindow.open(map, marker);
     });
-    manualRest.push(tempManualRest);
+    manualRestaurants.push(tempManualRest);
     document.getElementById('name').value = '';
     document.getElementById('address').value = '';
-    displayManualRestaurants(tempManualRest);
+    displayManualRestaurants();
 }
 
 function getLocalRating(obj) {
@@ -632,7 +761,7 @@ function fetchNearbyRestaurants() {
     service.nearbySearch(request, storeFetchedRestaurants);
 }
 
-var fetchedRestaurants = [];
+fetchedRestaurants = [];
 var fetchedRest = { imageUrl: '', name: '', rating: 0, user_ratings_total: 0, vicinity: '', location: '', place_id: 0 }
 
 function storeFetchedRestaurants(results, status) {
@@ -704,21 +833,21 @@ function searchByRating() {
     }
 }
 
-function toggleMenu(){
+function toggleMenu() {
     var x = document.getElementById("listContainer")
 
-    if(window.innerWidth>600){
+    if (window.innerWidth > 600) {
         return
     }
     if (x.style.display === "none") {
         x.style.display = "block";
-      } else {
+    } else {
         x.style.display = "none";
-      }
+    }
 }
 
-window.onresize= function(){
-    if(window.innerWidth>600){
+window.onresize = function () {
+    if (window.innerWidth > 600) {
         var x = document.getElementById("listContainer")
         x.style.display = "block";
         var y = document.getElementById("back")
@@ -727,7 +856,7 @@ window.onresize= function(){
         z.style.display = "none"
         document.getElementById("userreview").cols = "58"
     }
-    if(window.innerWidth < 600){
+    if (window.innerWidth < 600) {
         var y = document.getElementById("back")
         y.style.display = "block"
         var z = document.getElementById("fab")
