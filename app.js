@@ -288,19 +288,21 @@ var clostedText;
 //get user location
 function getLocation() {
     if (navigator.geolocation) {
-        navigator.geolocation.watchPosition(showPosition);
+       navigator.geolocation.watchPosition(showPosition);
     } else {
         console.log("Geolocation is not supported by this browser.");
         userLocation = {
             lat: 33.540102,
             lng: 73.1485852
         };
+        initMap();
     }
 }
 function showPosition(position) {
-    userLocation.lat = position.coords.latitud;
+    userLocation.lat = position.coords.latitude;
     userLocation.lng = position.coords.longitude;
-    console.log('Grabbed user location')
+    console.log('Grabbed user location',userLocation)
+    initMap();
 }
 
 //initializes map
@@ -325,6 +327,8 @@ function initMap() {
     google.maps.event.addListener(map, "center_changed", function () {
         fetchNearbyRestaurants();
     });
+    displayLocalRestaurants(); 
+    fetchNearbyRestaurants();
 }
 
 //display local markers
