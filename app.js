@@ -301,7 +301,6 @@ function getLocation() {
 function showPosition(position) {
     userLocation.lat = position.coords.latitude;
     userLocation.lng = position.coords.longitude;
-    console.log('Grabbed user location',userLocation)
     initMap();
 }
 
