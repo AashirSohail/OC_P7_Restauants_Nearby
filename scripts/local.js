@@ -1,5 +1,5 @@
 //json for local restaurants
-var localRest = [
+let localRest = [
     {
         "restaurantName": "Bronco",
         "address": "39 Rue des Petites Écuries, 75010 Paris",
@@ -52,7 +52,7 @@ var localRest = [
 
 //display local markers
 const addLocalMarkers = () => {
-    for (var i = 0; i < localRest.length; i++) {
+    for (let i = 0; i < localRest.length; i++) {
         addMarker({ lat: localRest[i].lat, lng: localRest[i].long }, localRest[i].restaurantName, "yellow")
     }
 }
@@ -60,12 +60,12 @@ const addLocalMarkers = () => {
 
 // display local restaurants
 const displayLocalRestaurants = (ratingSearch) => {
-    var list = document.getElementById('listItems')
-    var min = document.getElementById("slidermin").value;
-    var max = document.getElementById("slidermax").value;
-    for (var i = 0; i < localRest.length; i++) {
+    let list = document.getElementById('listItems')
+    let min = document.getElementById("slidermin").value;
+    let max = document.getElementById("slidermax").value;
+    for (let i = 0; i < localRest.length; i++) {
         if (!ratingSearch || (fetchedRestaurants[i].rating >= min && fetchedRestaurants[i].rating <= max)) {
-            var item = `
+            let item = `
         <div place = ${localRest[i].restaurantName} class = "item" onclick="addLocalReview(this)">
             <div class = "row">
             <div class = "col-7 text-left">
@@ -93,7 +93,7 @@ const addLocalReview = (item) => {
         rest = localRest.filter(r => {
             return r.restaurantName == item.getAttribute('place')
         })
-        var template = `
+        let template = `
         <div class = "text-left">    
             <p class = "clickedName">${rest[0].restaurantName} <a class = "cross" id ="cross"><i func="cross" class="fas fa-times-circle"></i></a></p>
             <p class = "clickedRating"><i class="pr-2 fas fa-star amber-text"></i> Rating <b class = "right">${getLocalRating(rest[0].ratings)}</b></p>
@@ -136,9 +136,9 @@ const addLocalReview = (item) => {
 }
 
 const getLocalRating = (obj) => {
-    var len = obj.length;
-    var sum = 0;
-    for (var i = 0; i < len; i++) {
+    let len = obj.length;
+    let sum = 0;
+    for (let i = 0; i < len; i++) {
         sum += obj[i].stars
     }
     return sum / len;

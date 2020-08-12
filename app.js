@@ -1,14 +1,14 @@
-var map;
-var service;
+let map;
+let service;
 //default postion
-var userLocation = {
+let userLocation = {
     lat: 33.540111,
     lng: 73.148924
 };
 //reference to the resutarant being explored
-var currentClickedLocation;
+let currentClickedLocation;
 //list of restaurants that needs to be hidden
-var clostedText;
+let clostedText;
 
 //get user location
 function getLocation() {
@@ -40,7 +40,7 @@ const initMap = () => {
     });
     service = new google.maps.places.PlacesService(map);
 
-    var pos = {
+    let pos = {
         lat: userLocation.lat,
         lng: userLocation.lng
     }
@@ -59,7 +59,7 @@ const initMap = () => {
 
 document.addEventListener('click', (e) => {
     e = e || window.event;
-    var target = e.target || e.srcElement, text = target.textContent || target.innerText;
+    let target = e.target || e.srcElement, text = target.textContent || target.innerText;
     if (event.target.getAttribute('func') === 'cross') {
         let listContainer = document.getElementById('listContainer');
         listContainer.innerHTML = clostedText;
@@ -67,18 +67,18 @@ document.addEventListener('click', (e) => {
 }, false);
 
 const addMarker = (pos, title, color) => {
-    var marker = new google.maps.Marker({
+    let marker = new google.maps.Marker({
         position: pos,
         map: map,
         icon: 'imgs/' + color + '.png',
         title: title
     });
-    var contentString = `
+    let contentString = `
         <h5>
             ${title}
         </h5>
     `
-    var infowindow = new google.maps.InfoWindow({
+    let infowindow = new google.maps.InfoWindow({
         content: contentString
     });
     marker.addListener('click', () => {
@@ -87,9 +87,9 @@ const addMarker = (pos, title, color) => {
 }
 
 const addReview = () => {
-    var modal = document.getElementById("form1");
+    let modal = document.getElementById("form1");
     modal.style.display = "block";
-    var span = document.getElementsByClassName("close")[0];
+    let span = document.getElementsByClassName("close")[0];
     span.onclick = () => {
         modal.style.display = "none";
     }
@@ -103,12 +103,12 @@ const addReview = () => {
 
 const submitReview = () => {
 
-    var modal = document.getElementById("form1");
+    let modal = document.getElementById("form1");
     modal.style.display = "none";
 
-    var name = document.getElementById('username').value;
-    var review = document.getElementById('userreview').value;
-    var rating = document.getElementById('userrating').value;
+    let name = document.getElementById('username').value;
+    let review = document.getElementById('userreview').value;
+    let rating = document.getElementById('userrating').value;
     document.getElementById('listContainer').innerHTML += `
     <div class = "row reviewList">
         <div class = "col-7 text-left">
@@ -128,21 +128,21 @@ const submitReview = () => {
 }
 
 const updateMin = () => {
-    var slider = document.getElementById("slidermin");
-    var output = document.getElementById("ratingMin");
+    let slider = document.getElementById("slidermin");
+    let output = document.getElementById("ratingMin");
     output.innerHTML = slider.value; // Display the default slider value
 
 }
 const updateMax = () =>{
-    var slider = document.getElementById("slidermax");
-    var output = document.getElementById("ratingMax");
+    let slider = document.getElementById("slidermax");
+    let output = document.getElementById("ratingMax");
     output.innerHTML = slider.value; // Display the default slider value
 
 }
 
 const searchByRating = () => {
-    var sliderMin = document.getElementById("slidermin").value;
-    var sliderMax = document.getElementById("slidermax").value;
+    let sliderMin = document.getElementById("slidermin").value;
+    let sliderMax = document.getElementById("slidermax").value;
 
     if (sliderMin > sliderMax) {
         alert('Min can not be greater than Max');
@@ -153,7 +153,7 @@ const searchByRating = () => {
 }
 
 const toggleMenu = () => {
-    var x = document.getElementById("listContainer")
+    let x = document.getElementById("listContainer")
 
     if (window.innerWidth > 600) {
         return
@@ -167,18 +167,18 @@ const toggleMenu = () => {
 
 window.onresize = () => {
     if (window.innerWidth > 600) {
-        var x = document.getElementById("listContainer")
+        let x = document.getElementById("listContainer")
         x.style.display = "block";
-        var y = document.getElementById("back")
+        let y = document.getElementById("back")
         y.style.display = "none"
-        var z = document.getElementById("fab")
+        let z = document.getElementById("fab")
         z.style.display = "none"
         document.getElementById("userreview").cols = "58"
     }
     if (window.innerWidth < 600) {
-        var y = document.getElementById("back")
+        let y = document.getElementById("back")
         y.style.display = "block"
-        var z = document.getElementById("fab")
+        let z = document.getElementById("fab")
         z.style.display = "block"
         //userreview
         document.getElementById("userreview").cols = "34"

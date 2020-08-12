@@ -1,19 +1,19 @@
 //user added resturants will be appended here
-var manualRestaurants = [];
+let manualRestaurants = [];
 
 //display manual markers
 const addManualMarkers = () => {
-    for (var i = 0; i < manualRestaurants.length; i++) {
+    for (let i = 0; i < manualRestaurants.length; i++) {
         addMarker({ lat: manualRestaurants[i].lat, lng: manualRestaurants[i].long }, manualRestaurants[i].restaurantName, "blue")
     }
 }
 
 //display restaurant
 const displayManualRestaurants = () => {
-    var list = document.getElementById('listItems')
+    let list = document.getElementById('listItems')
 
     for(let i = 0; i < manualRestaurants.length; i++){
-        var item = `
+        let item = `
         <div place = ${manualRestaurants[i].name} class = "item" onclick = "addManualReview(this)">
             <div class = "row">
             <div class = "col-7 text-left">
@@ -40,7 +40,7 @@ const addManualReview = (item) => {
         rest = manualRestaurants.filter(r => {
             return r.name == item.getAttribute('place')
         }) 
-        var template = `
+        let template = `
         <div class = "text-left">    
             <p class = "clickedName">${rest[0].name} <a class = "cross" id ="cross"><i func="cross" class="fas fa-times-circle"></i></a></p>
             <p class = "clickedRating"><i class="pr-2 fas fa-star amber-text"></i> Rating <b class = "right">${rest[0].rating}</b></p>
@@ -84,8 +84,8 @@ const addManualReview = (item) => {
 
 const addManually = (location) => {
     //popup form
-    var modal = document.getElementById("form");
-    var span = document.getElementsByClassName("close")[0];
+    let modal = document.getElementById("form");
+    let span = document.getElementsByClassName("close")[0];
     modal.style.display = "block";
     span.onclick =  () => {
         modal.style.display = "none";
@@ -98,17 +98,17 @@ const addManually = (location) => {
     currentClickedLocation = location;
 }
 
-var tempManualRest = {
+let tempManualRest = {
     name: '',
     address: '',
     ratings: 0
 }
 const addManualRestaurant = () => {
-    var modal = document.getElementById("form");
+    let modal = document.getElementById("form");
     modal.style.display = "none";
 
-    var name = document.getElementById('name').value;
-    var address = document.getElementById('address').value;
+    let name = document.getElementById('name').value;
+    let address = document.getElementById('address').value;
     console.log(name, address);
     tempManualRest.name = name;
     tempManualRest.address = address;
@@ -121,19 +121,19 @@ const addManualRestaurant = () => {
         }
     ];
 
-    var marker = new google.maps.Marker({
+    let marker = new google.maps.Marker({
         position: currentClickedLocation,
         map: map,
         icon: 'imgs/' + "blue" + '.png',
         title: tempManualRest.name
     });
 
-    var contentString = `
+    let contentString = `
     <h5>
         ${name}
     </h5>
 `
-    var infowindow = new google.maps.InfoWindow({
+    let infowindow = new google.maps.InfoWindow({
         content: contentString
     });
     marker.addListener('click',() => {

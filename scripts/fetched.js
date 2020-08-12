@@ -1,22 +1,22 @@
 //restaurant fetched from API call
-var fetchedRestaurants = [];
+let fetchedRestaurants = [];
 
 //fetch restaurants from Places API
 const displayNearbyRestaurants = (ratingSearch) => {
-    var list = document.getElementById('listItems')
+    let list = document.getElementById('listItems')
     if (list) {
         list.innerHTML = ''
     }
     else {
         return
     }
-    var min = document.getElementById("slidermin").value;
-    var max = document.getElementById("slidermax").value;
+    let min = document.getElementById("slidermin").value;
+    let max = document.getElementById("slidermax").value;
     //console.clear();
-    for (var i = 0; i < fetchedRestaurants.length; i++) {
+    for (let i = 0; i < fetchedRestaurants.length; i++) {
         //if(!ratingSearch || (fetchedRestaurants.rating >= min && fetchedRestaurants.rating <= max)){
         if (!ratingSearch || (fetchedRestaurants[i].rating >= min && fetchedRestaurants[i].rating <= max)) {
-            var item = `
+            let item = `
             <div class = "item" place=${fetchedRestaurants[i].place_id} onclick = "review(this)">
                 <div class = "row">
                     <div class = "col-7 text-left">
@@ -39,10 +39,10 @@ const displayNearbyRestaurants = (ratingSearch) => {
     displayLocalRestaurants(false);
 }
 
-var clostedText = '';
+clostedText = '';
 
 const review = (item) => {
-    var clickedRestaurant = {
+    let clickedRestaurant = {
         name: '',
         img: '',
         rating: 0,
@@ -73,7 +73,7 @@ const review = (item) => {
                     let listContainer = document.getElementById('listContainer');
                     clostedText = listContainer.innerHTML;
                     listContainer.innerHTML = '';
-                    var template = `
+                    let template = `
                         <div class = "text-left">    
                             <p class = "clickedName">${clickedRestaurant.name} <a class = "cross" id ="cross"><i func="cross" class="fas fa-times-circle"></i></a></p>
                             <p class = "clickedRating"><i class="pr-2 fas fa-star amber-text"></i> Rating <b class = "right">${clickedRestaurant.rating}</b></p>
@@ -120,8 +120,8 @@ const review = (item) => {
 
 
 const fetchNearbyRestaurants = () => {
-    var map_center = map.getCenter()
-    var request = {
+    let map_center = map.getCenter()
+    let request = {
         location: map_center,
         radius: '500',
         type: ['restaurant'],
@@ -132,11 +132,11 @@ const fetchNearbyRestaurants = () => {
 }
 
 fetchedRestaurants = [];
-var fetchedRest = { imageUrl: '', name: '', rating: 0, user_ratings_total: 0, vicinity: '', location: '', place_id: 0 }
+let fetchedRest = { imageUrl: '', name: '', rating: 0, user_ratings_total: 0, vicinity: '', location: '', place_id: 0 }
 
 const storeFetchedRestaurants = (results, status) => {
     if (status == google.maps.places.PlacesServiceStatus.OK) {
-        for (var i = 0; i < results.length; i++) {
+        for (let i = 0; i < results.length; i++) {
             if (results[i].photos) {
                 fetchedRest.imageUrl = results[i].photos[0].getUrl({ maxWidth: 200, maxHeight: 200 });
             }

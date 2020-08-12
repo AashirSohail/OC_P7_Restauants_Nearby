@@ -1,5 +1,5 @@
 //styles
-var style = [
+let style = [
   {
       "elementType": "geometry",
       "stylers": [
