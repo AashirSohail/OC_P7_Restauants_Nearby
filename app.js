@@ -32,7 +32,6 @@ const showPosition = (position) =>  {
 
 //initializes map
 const initMap = () => {
-    console.clear()
     map = new google.maps.Map(document.getElementById("map"), {
         center: userLocation,
         zoom: 17,
@@ -55,6 +54,7 @@ const initMap = () => {
     });
     displayLocalRestaurants(); 
     fetchNearbyRestaurants();
+    console.clear()
 }
 
 document.addEventListener('click', (e) => {
